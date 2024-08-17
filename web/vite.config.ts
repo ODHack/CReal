@@ -5,7 +5,4 @@ import react from '@vitejs/plugin-react-swc'
 export default defineConfig({
   base: '/ODHack/',
   plugins: [react()],
-  build: {
-    outDir: 'docs',  // 出力ディレクトリを 'docs' に設定
-  },
 })
