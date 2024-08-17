@@ -10,8 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "dev": "vite",
+    "preview": "vite preview",
+    "build": "vite build && cp -r dist docs",                   
+    "rebuild": "vite build && rm -R docs && cp -r dist docs",
+    "git": "git add . && git commit && git push origin main"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",
