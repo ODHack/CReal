@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "preview": "vite preview",
+    "start": "vite build && cp -r dist docs && vite preview",
     "build": "vite build && cp -r dist docs",
     "rebuild": "vite build && rm -R docs && cp -r dist docs",
     "git": "git add . && git commit && git push origin main",
@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@react-google-maps/api": "^2.19.3",
+    "firebase": "^10.13.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.0.0"
