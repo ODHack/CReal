@@ -17,12 +17,11 @@ function Home() {
   return (
     <div className="flex h-screen w-screen">
       <div className="w-3/12 bg-gray-100 p-4 text-black">
-        <div>ここら辺に色んなボタンとかをつけるイメージ？？？</div>
         <button
           onClick={openModal}
-          className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+          className="mt-4 bg-red-500 text-white px-4 py-2 rounded w-full"
         >
-          災害状況を報告
+          被害状況を報告
         </button>
       </div>
       <Map />
