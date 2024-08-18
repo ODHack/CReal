@@ -13,11 +13,18 @@ const center = {
   lng: 139.759455
 };
 
+// type MarkerData = {
+//   id: string;
+//   position: { lat: number; lng: number };
+//   title: string;
+//   description: string;
+// };
 type MarkerData = {
   id: string;
-  position: { lat: number; lng: number };
   title: string;
   description: string;
+  imageUrl: string;
+  position: { lat: number; lng: number };
 };
 
 function Map() {
@@ -27,25 +34,47 @@ function Map() {
   const directionsService = useRef<google.maps.DirectionsService | null>(null);
   const directionsRenderer = useRef<google.maps.DirectionsRenderer | null>(null);
 
+  // useEffect(() => {
+  //   const fetchMarkers = async () => {
+  //     const markersCollection = collection(db, 'markers');
+  //     const markerSnapshot = await getDocs(markersCollection);
+  //     const markerList: MarkerData[] = markerSnapshot.docs.map(doc => {
+  //       const data = doc.data();
+  //       return {
+  //         id: doc.id,
+  //         position: {
+  //           lat: data.position._lat,
+  //           lng: data.position._long
+  //         },
+  //         title: data.title || '',
+  //         description: data.description || ''
+  //       };
+  //     });
+  //     setMarkers(markerList);
+  //   };
+
+  //   fetchMarkers();
+  // }, []);
+
   useEffect(() => {
     const fetchMarkers = async () => {
-      const markersCollection = collection(db, 'markers');
+      const markersCollection = collection(db, 'reports');
       const markerSnapshot = await getDocs(markersCollection);
       const markerList: MarkerData[] = markerSnapshot.docs.map(doc => {
         const data = doc.data();
-        return {
-          id: doc.id,
-          position: {
-            lat: data.position._lat,
-            lng: data.position._long
-          },
-          title: data.title || '',
-          description: data.description || ''
-        };
-      });
-      setMarkers(markerList);
-    };
-
+          return {
+            id: doc.id,
+            title: data.title || '',
+            description: data.description || '',
+            imageUrl: data.imageUrl || '',
+            position: {
+              lat: data.position.lat,
+              lng: data.position.lng
+            },
+          };
+        });
+        setMarkers(markerList);
+      };
     fetchMarkers();
   }, []);
 
@@ -78,9 +107,9 @@ function Map() {
             travelMode: google.maps.TravelMode.DRIVING,
           };
 
-          directionsService.current.route(request, (result, status) => {
+          directionsService.current!.route(request, (result, status) => {
             if (status === google.maps.DirectionsStatus.OK) {
-              directionsRenderer.current.setDirections(result);
+              directionsRenderer.current!.setDirections(result);
             } else {
               console.error('Directions request failed due to ' + status);
             }
@@ -118,8 +147,13 @@ function Map() {
                   onCloseClick={handleCloseInfoWindow}
                 >
                   <div>
-                    <h2 className="text-xl font-bold mb-2">{selectedMarker.title}</h2>
-                    <p className="mb-4">{selectedMarker.description}</p>
+                    <div className="text-black">
+                      <h2 className="text-xl font-bold mb-2">{selectedMarker.title}</h2>
+                      <p className="mb-4">{selectedMarker.description}</p>
+                      {selectedMarker.imageUrl && (
+                        <img src={selectedMarker.imageUrl} alt="Report" className="mb-4" />
+                      )}
+                    </div>
                     <button
                       onClick={handleDirectionsClick}
                       className="bg-green-500 text-white px-4 py-2 rounded"
