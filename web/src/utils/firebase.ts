@@ -1,6 +1,8 @@
 // firebase.ts
 import { initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
+import { getFirestore, collection, addDoc } from 'firebase/firestore';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+
 
 // Firebaseの設定
 const firebaseConfig = {
@@ -16,5 +18,6 @@ const firebaseConfig = {
 // Firebaseアプリの初期化
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const storage = getStorage(app);
 
-export { db };
+export { db, storage, collection, addDoc, ref, uploadBytes, getDownloadURL };
