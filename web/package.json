@@ -9,7 +9,7 @@
     "build": "vite build && cp -r dist docs",
     "rebuild": "vite build && rm -R docs && cp -r dist docs",
     "git": "git add . && git commit && git push origin main",
-    "deploy": "gh-pages -d dist"
+    "deploy": "vite build && cp -r dist docs && gh-pages -d dist"
   },
   "dependencies": {
     "@react-google-maps/api": "^2.19.3",
