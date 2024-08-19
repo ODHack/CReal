@@ -15,6 +15,7 @@ export const addReportToFirestore = async (title: string, description: string, p
     description,
     position,
     imageUrl,
-    timestamp: new Date()
+    timestamp: new Date(),
+    comments: []
   });
 };
