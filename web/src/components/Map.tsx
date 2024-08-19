@@ -13,6 +13,7 @@ function Map() {
   const directionsService = useRef<google.maps.DirectionsService | null>(null);
   const directionsRenderer = useRef<google.maps.DirectionsRenderer | null>(null);
   const [isMenuVisible, setIsMenuVisible] = useState(false);
+  const [loading, setLoading] = useState(false); // 新しく追加
 
   const [selectedMarker, setSelectedMarker] = useState<MarkerData>({
     id: '1', // 例としてIDを設定
@@ -55,6 +56,8 @@ function Map() {
 
   const handleDirectionsClick = () => {
     if (directionsService.current && directionsRenderer.current && selectedMarker && map) {
+      setLoading(true); // ルート検索中に設定
+
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
@@ -68,6 +71,8 @@ function Map() {
           };
 
           directionsService.current!.route(request, (result, status) => {
+            setLoading(false); // ルート検索終了後に設定
+
             if (status === google.maps.DirectionsStatus.OK) {
               directionsRenderer.current!.setDirections(result);
             } else {
@@ -76,6 +81,7 @@ function Map() {
           });
         },
         (error) => {
+          setLoading(false); // エラー発生時にも設定
           console.error('Error getting current location:', error);
         }
       );
@@ -106,7 +112,8 @@ function Map() {
                   selectedMarker={selectedMarker} 
                   handleDirectionsClick={handleDirectionsClick} 
                   handleCloseInfoWindow={handleCloseInfoWindow} 
-                  handleMenuToggle={handleMenuToggle} 
+                  handleMenuToggle={handleMenuToggle}
+                  loading={loading} // ここで loading プロパティを渡す
                 />
               )}
               {isMenuVisible && selectedMarker && selectedMarker.id === marker.id && (
