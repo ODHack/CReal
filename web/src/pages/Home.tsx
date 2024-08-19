@@ -25,7 +25,6 @@ function Home() {
         </button>
       </div>
       <Map />
-
       {isModalOpen && (
         <ReportModal isOpen={isModalOpen} onClose={closeModal} />
       )}
