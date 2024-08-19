@@ -1,15 +1,17 @@
 import React from 'react';
 import { InfoWindow } from '@react-google-maps/api';
 import { MarkerData } from '../types/markerTypes';
+import { FaSpinner } from 'react-icons/fa';
 
 interface MapInfoWindowProps {
   selectedMarker: MarkerData;
   handleDirectionsClick: () => void;
   handleCloseInfoWindow: () => void;
-  handleMenuToggle: () => void; // 新しい関数をプロパティとして受け取ります
+  handleMenuToggle: () => void;
+  loading: boolean; // 必須プロパティとして追加
 }
 
-const MapInfoWindow: React.FC<MapInfoWindowProps> = ({ selectedMarker, handleDirectionsClick, handleCloseInfoWindow, handleMenuToggle }) => {
+const MapInfoWindow: React.FC<MapInfoWindowProps> = ({ selectedMarker, handleDirectionsClick, handleCloseInfoWindow, handleMenuToggle, loading }) => {
   return (
     <InfoWindow
       position={selectedMarker.position}
@@ -25,12 +27,20 @@ const MapInfoWindow: React.FC<MapInfoWindowProps> = ({ selectedMarker, handleDir
         )}
         <button
           onClick={handleDirectionsClick}
-          className="bg-green-500 text-white px-4 py-2 rounded w-full mt-2"
+          className={`${loading ? 'bg-orange-500' : 'bg-green-500'} text-white px-4 py-2 rounded w-full mt-2 flex items-center justify-center`}
         >
-          ここに向かう
+          {loading ? (
+            <>
+              <FaSpinner className="animate-spin mr-2" />
+              ルート検索中
+            </>
+          )
+          : (
+            'ここに向かう'
+          )}
         </button>
         <button
-          onClick={handleMenuToggle} // ボタンがクリックされたときにメニューをトグルします
+          onClick={handleMenuToggle}
           className="bg-blue-500 text-white px-4 py-2 rounded w-full mt-2"
         >
           コメントを表示
