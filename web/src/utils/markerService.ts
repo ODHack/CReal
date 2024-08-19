@@ -16,6 +16,7 @@ export const fetchMarkersData = async (): Promise<MarkerData[]> => {
         lat: data.position.lat,
         lng: data.position.lng,
       },
+      comments: data.comments || [],
     };
   });
   return markerList;

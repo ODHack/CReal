@@ -6,9 +6,10 @@ interface MapInfoWindowProps {
   selectedMarker: MarkerData;
   handleDirectionsClick: () => void;
   handleCloseInfoWindow: () => void;
+  handleMenuToggle: () => void; // 新しい関数をプロパティとして受け取ります
 }
 
-const MapInfoWindow: React.FC<MapInfoWindowProps> = ({ selectedMarker, handleDirectionsClick, handleCloseInfoWindow }) => {
+const MapInfoWindow: React.FC<MapInfoWindowProps> = ({ selectedMarker, handleDirectionsClick, handleCloseInfoWindow, handleMenuToggle }) => {
   return (
     <InfoWindow
       position={selectedMarker.position}
@@ -27,6 +28,12 @@ const MapInfoWindow: React.FC<MapInfoWindowProps> = ({ selectedMarker, handleDir
           className="bg-green-500 text-white px-4 py-2 rounded w-full mt-2"
         >
           ここに向かう
+        </button>
+        <button
+          onClick={handleMenuToggle} // ボタンがクリックされたときにメニューをトグルします
+          className="bg-blue-500 text-white px-4 py-2 rounded w-full mt-2"
+        >
+          コメントを表示
         </button>
       </div>
     </InfoWindow>

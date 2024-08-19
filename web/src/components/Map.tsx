@@ -5,13 +5,30 @@ import { MarkerData } from '../types/markerTypes';
 import markerDanger from '../assets/markerDanger.png';
 import MapInfoWindow from './MapInfoWindow';
 import { containerStyle, center } from '../utils/mapStyles';
+import CommentsPanel from './CommentsPanel';
 
 function Map() {
   const [markers, setMarkers] = useState<MarkerData[]>([]);
-  const [selectedMarker, setSelectedMarker] = useState<MarkerData | null>(null);
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const directionsService = useRef<google.maps.DirectionsService | null>(null);
   const directionsRenderer = useRef<google.maps.DirectionsRenderer | null>(null);
+  const [isMenuVisible, setIsMenuVisible] = useState(false);
+
+  const [selectedMarker, setSelectedMarker] = useState<MarkerData>({
+    id: '1', // 例としてIDを設定
+    title: 'Marker Title',
+    description: 'Marker Description',
+    position: { lat: 0, lng: 0 },
+    comments: [] // 初期コメント
+  });
+
+  const updateSelectedMarker = (updatedMarker: MarkerData) => {
+    setSelectedMarker(updatedMarker);
+  };
+
+  const handleMenuToggle = () => {
+    setIsMenuVisible(!isMenuVisible);
+  };
 
   useEffect(() => {
     const loadMarkers = async () => {
@@ -89,6 +106,14 @@ function Map() {
                   selectedMarker={selectedMarker} 
                   handleDirectionsClick={handleDirectionsClick} 
                   handleCloseInfoWindow={handleCloseInfoWindow} 
+                  handleMenuToggle={handleMenuToggle} 
+                />
+              )}
+              {isMenuVisible && selectedMarker && selectedMarker.id === marker.id && (
+                <CommentsPanel 
+                  selectedMarker={selectedMarker} 
+                  handleMenuToggle={handleMenuToggle}
+                  updateSelectedMarker={updateSelectedMarker}
                 />
               )}
             </Marker>
