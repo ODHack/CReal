@@ -1,7 +1,7 @@
 export interface Comment {
   id: string;
   text: string;
-  typestamp: Date;
+  timestamp: Date;
 }
 
 export interface MarkerData {
