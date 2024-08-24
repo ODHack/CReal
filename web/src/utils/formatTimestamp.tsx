@@ -1,6 +1,6 @@
 import { Timestamp } from 'firebase/firestore';
 
-const formatTimestamp = (timestamp: Timestamp | any) => {
+const formatTimeStamp = (timestamp: Timestamp | any) => {
   if (timestamp instanceof Timestamp) {
     const date = timestamp.toDate(); // Firestore Timestamp を Date に変換
     return date.toLocaleString('ja-JP', {
@@ -15,4 +15,4 @@ const formatTimestamp = (timestamp: Timestamp | any) => {
   return ''; // Timestamp でない場合は空文字を返す
 };
 
-export default formatTimestamp;
+export default formatTimeStamp;
