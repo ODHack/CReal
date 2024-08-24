@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { db, collection } from '../utils/firebase';
 import { getDocs, Timestamp } from 'firebase/firestore';
-import formatTimestamp from "../utils/formatTimeStamp";
+import formatTimestamp from "../utils/formatTimestamp";
 
 interface Report {
   id: string;
@@ -9,7 +9,6 @@ interface Report {
   content: string;
   imageUrl: string;
   timestamp: Timestamp;
-  [key: string]: any; // 他のフィールドを含める場合
 }
 
 const Admin: React.FC = () => {
