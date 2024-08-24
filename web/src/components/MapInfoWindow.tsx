@@ -2,7 +2,6 @@ import React from 'react';
 import { InfoWindow } from '@react-google-maps/api';
 import { MarkerData } from '../types/markerTypes';
 import { FaSpinner } from 'react-icons/fa';
-import formatTimestamp from '../utils/formatTimeStamp';
 
 interface MapInfoWindowProps {
   selectedMarker: MarkerData;
@@ -12,10 +11,7 @@ interface MapInfoWindowProps {
   loading: boolean; // 必須プロパティとして追加
 }
 
-
 const MapInfoWindow: React.FC<MapInfoWindowProps> = ({ selectedMarker, handleDirectionsClick, handleCloseInfoWindow, handleMenuToggle, loading }) => {
-  console.log(selectedMarker);
-
   return (
     <InfoWindow
       position={selectedMarker.position}
@@ -25,7 +21,6 @@ const MapInfoWindow: React.FC<MapInfoWindowProps> = ({ selectedMarker, handleDir
         <div className="text-gray-900">
           <h2 className="text-xl font-bold mb-2">{selectedMarker.title}</h2>
           <p className="mb-4">{selectedMarker.description}</p>
-          <p>{formatTimestamp(selectedMarker.timestamp)}</p>
         </div>
         {selectedMarker.imageUrl && (
           <img src={selectedMarker.imageUrl} alt="Report" style={{ maxWidth: '100%', height: 'auto' }} />
