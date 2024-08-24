@@ -1,21 +1,17 @@
 import React from 'react';
 import { InfoWindow } from '@react-google-maps/api';
-import { MarkerData } from '../types/markerTypes';
+import { EvacuationMarkerData } from '../types/markerTypes';
 import { FaSpinner } from 'react-icons/fa';
-// import formatTimeStamp from '../utils/formatTimeStamp';
 
-interface MapInfoWindowProps {
-  selectedMarker: MarkerData;
+interface EvacuationInfoWindowProps {
+  selectedMarker: EvacuationMarkerData;
   handleDirectionsClick: () => void;
   handleCloseInfoWindow: () => void;
   handleMenuToggle: () => void;
-  loading: boolean; // 必須プロパティとして追加
+  loading: boolean;
 }
 
-
-const MapInfoWindow: React.FC<MapInfoWindowProps> = ({ selectedMarker, handleDirectionsClick, handleCloseInfoWindow, handleMenuToggle, loading }) => {
-  console.log(selectedMarker);
-
+const EvacuationInfoWindow: React.FC<EvacuationInfoWindowProps> = ({ selectedMarker, handleDirectionsClick, handleCloseInfoWindow, handleMenuToggle, loading }) => {
   return (
     <InfoWindow
       position={selectedMarker.position}
@@ -24,12 +20,11 @@ const MapInfoWindow: React.FC<MapInfoWindowProps> = ({ selectedMarker, handleDir
       <div className="info-window-content" style={{ maxWidth: '300px' }}>
         <div className="text-gray-900">
           <h2 className="text-xl font-bold mb-2">{selectedMarker.title}</h2>
-          <p className="mb-4">{selectedMarker.description}</p>
-          {/* <p>{formatTimestamp(selectedMarker.timestamp)}</p> */}
+          <p className="mb-2">エレベーター1階: {selectedMarker.elvator1f ? 'あり' : 'なし'}</p>
+          <p className="mb-2">スロープ: {selectedMarker.slope ? 'あり' : 'なし'}</p>
+          <p className="mb-2">点字ブロック: {selectedMarker.brailleBlock ? 'あり' : 'なし'}</p>
+          <p className="mb-4">車椅子トイレ: {selectedMarker.WheelchairToilet ? 'あり' : 'なし'}</p>
         </div>
-        {selectedMarker.imageUrl && (
-          <img src={selectedMarker.imageUrl} alt="Report" style={{ maxWidth: '100%', height: 'auto' }} />
-        )}
         <button
           onClick={handleDirectionsClick}
           className={`${loading ? 'bg-orange-500' : 'bg-green-500'} text-white px-4 py-2 rounded w-full mt-2 flex items-center justify-center`}
@@ -39,20 +34,13 @@ const MapInfoWindow: React.FC<MapInfoWindowProps> = ({ selectedMarker, handleDir
               <FaSpinner className="animate-spin mr-2" />
               ルート検索中
             </>
-          )
-          : (
+          ) : (
             'ここに向かう'
           )}
-        </button>
-        <button
-          onClick={handleMenuToggle}
-          className="bg-blue-500 text-white px-4 py-2 rounded w-full mt-2"
-        >
-          コメントを表示
         </button>
       </div>
     </InfoWindow>
   );
 };
 
-export default MapInfoWindow;
+export default EvacuationInfoWindow;
