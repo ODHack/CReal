@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { db } from '../utils/firebase'; // Firebase設定をインポート
-import { doc, updateDoc } from 'firebase/firestore';
+import { doc, updateDoc, Timestamp } from 'firebase/firestore';
 import { MarkerData } from '../types/markerTypes';
+import formatTimestamp from "../utils/formatTimeStamp";
 
 interface CommentsPanelProps {
   selectedMarker: MarkerData;
@@ -22,7 +23,7 @@ const CommentsPanel: React.FC<CommentsPanelProps> = ({ selectedMarker, updateSel
     const newComment = {
       id: Date.now().toString(), // 一意の ID を生成（サンプルとして現在のタイムスタンプを使用）
       text: comment,
-      timestamp: new Date() // 現在の日時をタイムスタンプとして使用
+      timestamp: Timestamp.now()
     };
 
     try {
@@ -52,7 +53,7 @@ const CommentsPanel: React.FC<CommentsPanelProps> = ({ selectedMarker, updateSel
           {selectedMarker.comments.length > 0 ? (
             selectedMarker.comments.map((comment) => (
               <div key={comment.id} className="comment-item border-b border-gray-300 py-2">
-                <p className="text-gray-600 text-sm">{new Date(comment.timestamp).toLocaleString()}</p>
+                <p className="text-gray-600 text-sm">{formatTimestamp(comment.timestamp)}</p>
                 <p>{comment.text}</p>
               </div>
             ))
