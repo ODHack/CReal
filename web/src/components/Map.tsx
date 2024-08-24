@@ -10,8 +10,8 @@ import EvacuationInfoWindow from './EvacuationInfoWindow';
 import AEDInfoWindow from './AEDInfoWindow';
 import { containerStyle, center } from '../utils/mapStyles';
 import CommentsPanel from './CommentsPanel';
-import evacuationData from '../assets/evacuation_data.json';
-import aedData from '../assets/aed_data.json';
+import evacuationData from '../assets/evacuationData.json';
+import aedData from '../assets/AEDData.json';
 
 function Map() {
   const [firebaseMarkers, setFirebaseMarkers] = useState<MarkerData[]>([]);
