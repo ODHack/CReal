@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { db } from '../utils/firebase'; // Firebase設定をインポート
 import { doc, updateDoc, Timestamp } from 'firebase/firestore';
 import { MarkerData } from '../types/markerTypes';
-import formatTimestamp from "../utils/formatTimeStamp";
+import formatTimestamp from "../utils/formatTimestamp";
 
 interface CommentsPanelProps {
   selectedMarker: MarkerData;
