@@ -1,13 +1,41 @@
+import { Timestamp } from 'firebase/firestore';
+
 export interface Comment {
   id: string;
   text: string;
-  timestamp: Date;
+  timestamp: Timestamp;
 }
 
 export interface MarkerData {
   id: string;
   title: string;
   description: string;
+  imageUrl: string;
   position: { lat: number; lng: number };
   comments: Comment[]; // コメントの配列
+  // timestamp: Timestamp;
+}
+
+export interface MarkerData2 {
+  id: string;
+  title: string;
+  description: string;
+  position: { lat: number; lng: number };
+}
+
+export interface EvacuationMarkerData {
+  id: string;
+  title: string;
+  elvator1f: boolean,
+  slope: boolean,
+  brailleBlock: boolean,
+  WheelchairToilet: boolean,
+  position: { lat: number; lng: number };
+}
+
+export interface AEDMarkerData {
+  id: string;
+  title: string;
+  place: string;
+  position: { lat: number; lng: number };
 }
