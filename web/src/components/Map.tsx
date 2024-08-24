@@ -3,7 +3,7 @@ import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import { fetchMarkersData } from '../utils/markerService';
 import { MarkerData, EvacuationMarkerData, AEDMarkerData } from '../types/markerTypes';
 import markerDanger from '../assets/markerDanger.png';
-import evacuationIcon from '../assets/icons/evacuationIcon.png';
+import evacuationIcon from '../assets/Icons/evacuationIcon.png';
 import aedIcon from '../assets/icons/AEDIcon.png';
 import MapInfoWindow from './MapInfoWindow';
 import EvacuationInfoWindow from './EvacuationInfoWindow'; 
