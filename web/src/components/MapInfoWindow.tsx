@@ -13,7 +13,7 @@ interface MapInfoWindowProps {
 }
 
 
-const MapInfoWindow: React.FC<MapInfoWindowProps> = ({ selectedMarker, handleDirectionsClick, handleCloseInfoWindow, handleMenuToggle, loading }) => {
+const MapInfoWindow: React.FC<MapInfoWindowProps> = ({ selectedMarker, handleDirectionsClick, handleCloseInfoWindow, handleMenuToggle, isMenuVisible, loading }) => {
   console.log(selectedMarker);
 
   return (
@@ -21,14 +21,14 @@ const MapInfoWindow: React.FC<MapInfoWindowProps> = ({ selectedMarker, handleDir
       position={selectedMarker.position}
       onCloseClick={handleCloseInfoWindow}
     >
-      <div className="info-window-content" style={{ maxWidth: '300px' }}>
+      <div className="info-window-content" style={{ maxWidth: '300px'}}>
         <div className="text-gray-900">
           <h2 className="text-xl font-bold mb-2">{selectedMarker.title}</h2>
           <p className="mb-4">{selectedMarker.description}</p>
           {/* <p>{formatTimestamp(selectedMarker.timestamp)}</p> */}
         </div>
         {selectedMarker.imageUrl && (
-          <img src={selectedMarker.imageUrl} alt="Report" style={{ maxWidth: '100%', height: 'auto' }} />
+          <img src={selectedMarker.imageUrl} alt="Report" style={{ maxWidth: '100%', height: '200px' }} />
         )}
         <button
           onClick={handleDirectionsClick}
@@ -46,9 +46,9 @@ const MapInfoWindow: React.FC<MapInfoWindowProps> = ({ selectedMarker, handleDir
         </button>
         <button
           onClick={handleMenuToggle}
-          className="bg-blue-500 text-white px-4 py-2 rounded w-full mt-2"
+          className={`px-4 py-2 rounded w-full mt-2 ${!isMenuVisible ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'}`}
         >
-          コメントを表示
+          {isMenuVisible ? "コメントを表示": "コメントを非表示"}
         </button>
       </div>
     </InfoWindow>

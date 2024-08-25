@@ -186,6 +186,7 @@ function Home() {
             handleDirectionsClick={handleDirectionsClick} 
             handleCloseInfoWindow={handleCloseInfoWindow} 
             handleMenuToggle={handleMenuToggle}
+            isMenuVisible={isMenuVisible}
             loading={loading} 
           />
         )}
