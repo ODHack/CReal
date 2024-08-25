@@ -17,6 +17,10 @@ export const fetchMarkersData = async (): Promise<MarkerData[]> => {
         lng: data.position.lng,
       },
       comments: data.comments || [],
+      disasterType: data.disasterType || '',
+      damageLevel: data.damageLevel || '',
+      affectedArea: data.affectedArea || '',
+      damageType: data.damageType || '',
       solved: data.solved,
     };
   });

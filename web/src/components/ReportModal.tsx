@@ -54,7 +54,7 @@ const ReportModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
 
       try {
         const options = {
-          maxSizeMB: 1,
+          maxSizeMB: 10,
           maxWidthOrHeight: 1024,
           useWebWorker: true,
         };
@@ -64,7 +64,7 @@ const ReportModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
         setImageUrl(url);
       } catch (error) {
         console.error('Error compressing image:', error);
-        alert('画像の圧縮中にエラーが発生しました。');
+        alert('画像の圧縮中にエラーが発生しました。ファイルサイズが大きすぎる可能性があります。');
       }
     }
   };
@@ -86,7 +86,7 @@ const ReportModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
       setSuccess(true);
     } catch (error) {
       console.error('Error adding document: ', error);
-      alert('送信中にエラーが発生しました。');
+      alert('送信中にエラーが発生しました。ファイルサイズが大きすぎる可能性があります。');
     } finally {
       setLoading(false);
     }

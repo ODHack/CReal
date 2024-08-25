@@ -3,6 +3,7 @@ import { db } from '../utils/firebase'; // Firebase設定をインポート
 import { doc, updateDoc, Timestamp } from 'firebase/firestore';
 import { MarkerData } from '../types/markerTypes';
 import formatTimestamp from "../utils/formatTimestamp";
+import { FaSpinner } from 'react-icons/fa';
 
 interface CommentsPanelProps {
   selectedMarker: MarkerData;
@@ -12,12 +13,15 @@ interface CommentsPanelProps {
 
 const CommentsPanel: React.FC<CommentsPanelProps> = ({ selectedMarker, updateSelectedMarker, handleMenuToggle }) => {
   const [comment, setComment] = useState(''); // コメントの状態管理
+  const [loading, setLoading] = useState(false);
 
   const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setComment(e.target.value);
   };
 
   const handleCommentSubmit = async () => {
+    setLoading(true);
+
     if (comment.trim() === '') return; // 空のコメントは送信しない
 
     const newComment = {
@@ -43,6 +47,8 @@ const CommentsPanel: React.FC<CommentsPanelProps> = ({ selectedMarker, updateSel
     } catch (error) {
       console.error('Error updating marker comments: ', error);
     }
+
+    setLoading(false);
   };
 
   return (
@@ -69,9 +75,16 @@ const CommentsPanel: React.FC<CommentsPanelProps> = ({ selectedMarker, updateSel
         />
         <button
           onClick={handleCommentSubmit}
-          className="bg-blue-500 text-white px-4 py-2 rounded w-full"
+          className={`${loading ? 'bg-orange-500' : 'bg-blue-500 hover:bg-blue-700'} text-white px-4 py-2 rounded w-full mt-2 flex items-center justify-center`}
         >
-          送信
+          {loading ? (
+            <>
+              <FaSpinner className="animate-spin mr-2" />
+              送信中...
+            </>
+          ) : (
+            '送信'
+          )}
         </button>
       </div>
     </div>
