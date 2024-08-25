@@ -39,3 +39,15 @@ export interface AEDMarkerData {
   place: string;
   position: { lat: number; lng: number };
 }
+
+export interface HospitalMarkerData {
+  id: string;
+  title: string;
+  phone: string;
+  numberOfBeds: number,
+  tertiaryEmergency: boolean,
+  position: {
+    lat: number;
+    lng: number;
+  };
+}

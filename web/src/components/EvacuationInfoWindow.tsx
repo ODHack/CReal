@@ -20,10 +20,10 @@ const EvacuationInfoWindow: React.FC<EvacuationInfoWindowProps> = ({ selectedMar
       <div className="info-window-content" style={{ maxWidth: '300px' }}>
         <div className="text-gray-900">
           <h2 className="text-xl font-bold mb-2">{selectedMarker.title}</h2>
-          <p className="mb-2">エレベーター1階: {selectedMarker.elvator1f ? 'あり' : 'なし'}</p>
-          <p className="mb-2">スロープ: {selectedMarker.slope ? 'あり' : 'なし'}</p>
-          <p className="mb-2">点字ブロック: {selectedMarker.brailleBlock ? 'あり' : 'なし'}</p>
-          <p className="mb-4">車椅子トイレ: {selectedMarker.WheelchairToilet ? 'あり' : 'なし'}</p>
+          <p className="mb-2">エレベーター有/避難スペースが１階: {selectedMarker.elvator1f ? '◯' : '☓'}</p>
+          <p className="mb-2">スロープ等: {selectedMarker.slope ? '◯' : '☓'}</p>
+          <p className="mb-2">点字ブロック: {selectedMarker.brailleBlock ? '◯' : '☓'}</p>
+          <p className="mb-4">車椅子使用者対応トイレ: {selectedMarker.WheelchairToilet ? '◯' : '☓'}</p>
         </div>
         <button
           onClick={handleDirectionsClick}

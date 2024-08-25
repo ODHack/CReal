@@ -1,30 +1,34 @@
-import { useEffect, useState, useRef, useMemo, useCallback } from 'react';
+import React, { useEffect, useState, useRef, useMemo, useCallback } from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import { fetchMarkersData } from '../utils/markerService';
-import { MarkerData, EvacuationMarkerData, AEDMarkerData } from '../types/markerTypes';
-import markerDanger from '../assets/markerDanger.png';
+import { MarkerData, EvacuationMarkerData, AEDMarkerData, HospitalMarkerData } from '../types/markerTypes';
+import reportIcon from '../assets/markerIcons/reportIcon.png';
 import evacuationIcon from '../assets/markerIcons/evacuationIcon.png';
+import hospitalIcon from '../assets/markerIcons/hospitalIcon.png';
 import aedIcon from '../assets/markerIcons/AEDIcon.png';
 import MapInfoWindow from './MapInfoWindow';
 import EvacuationInfoWindow from './EvacuationInfoWindow'; 
 import AEDInfoWindow from './AEDInfoWindow';
+import HospitalInfoWindow from './HospitalInfoWindow';
 import { containerStyle, center } from '../utils/mapStyles';
 import CommentsPanel from './CommentsPanel';
 import evacuationData from '../assets/evacuationData.json';
 import aedData from '../assets/AEDData.json';
+import hospitalData from '../assets/hospitalData.json';
 
-function Map() {
+function Map({ showAED, showEvacuation, showHospital }: { showAED: boolean; showEvacuation: boolean, showHospital: boolean }) {
   const [firebaseMarkers, setFirebaseMarkers] = useState<MarkerData[]>([]);
   const [evacuationMarkers, setEvacuationMarkers] = useState<EvacuationMarkerData[]>([]);
   const [aedMarkers, setAedMarkers] = useState<AEDMarkerData[]>([]);
+  const [hospitalMarkers, setHospitalMarkers] = useState<HospitalMarkerData[]>([]);
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const directionsService = useRef<google.maps.DirectionsService | null>(null);
   const directionsRenderer = useRef<google.maps.DirectionsRenderer | null>(null);
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [selectedMarker, setSelectedMarker] = useState<MarkerData | EvacuationMarkerData | AEDMarkerData | null>(null);
+  const [selectedMarker, setSelectedMarker] = useState<MarkerData | EvacuationMarkerData | AEDMarkerData | HospitalMarkerData | null>(null);
 
-  const updateSelectedMarker = useCallback((updatedMarker: MarkerData | EvacuationMarkerData | AEDMarkerData) => {
+  const updateSelectedMarker = useCallback((updatedMarker: MarkerData | EvacuationMarkerData | AEDMarkerData | HospitalMarkerData) => {
     setSelectedMarker(updatedMarker);
   }, []);
 
@@ -72,6 +76,23 @@ function Map() {
       loadAEDMarkers();
     }
   }, [evacuationMarkers]);
+
+  useEffect(() => {
+    if (aedMarkers.length > 0) {
+      const loadHospitalMarkers = () => {
+        const hospitalMarkerData: HospitalMarkerData[] = hospitalData.map((data) => ({
+          id: "1",
+          title: data.施設名,
+          phone: data.電話番号,
+          numberOfBeds: parseInt(data.病床数),
+          tertiaryEmergency: data.三次救急 == "True",
+          position: { lat: parseFloat(data.Latitude), lng: parseFloat(data.Longitude) },
+        }));
+        setHospitalMarkers(hospitalMarkerData);
+      };
+      loadHospitalMarkers();
+    }
+  }, [aedMarkers]);
 
   const handleMapLoad = useCallback((map: google.maps.Map) => {
     setMap(map);
@@ -132,8 +153,8 @@ function Map() {
         position={marker.position}
         onClick={() => handleMarkerClick(marker)}
         icon={{
-          url: markerDanger,
-          scaledSize: new window.google.maps.Size(25, 25),
+          url: reportIcon,
+          scaledSize: new window.google.maps.Size(50, 50),
         }}
       >
         {selectedMarker && 'id' in selectedMarker && selectedMarker.id === marker.id && (
@@ -157,14 +178,14 @@ function Map() {
   ), [firebaseMarkers, selectedMarker, handleMarkerClick, handleDirectionsClick, handleCloseInfoWindow, handleMenuToggle, isMenuVisible]);
 
   const renderedEvacuationMarkers = useMemo(() => (
-    evacuationMarkers.map((marker) => (
+    showEvacuation && evacuationMarkers.map((marker) => (
       <Marker
         key={marker.id}
         position={marker.position}
         onClick={() => handleMarkerClick(marker)}
         icon={{
           url: evacuationIcon,
-          scaledSize: new window.google.maps.Size(25, 25),
+          scaledSize: new window.google.maps.Size(35, 35),
         }}
       >
         {selectedMarker && 'id' in selectedMarker && selectedMarker.id === marker.id && selectedMarker.hasOwnProperty('elvator1f') && (
@@ -178,17 +199,17 @@ function Map() {
         )}
       </Marker>
     ))
-  ), [evacuationMarkers, selectedMarker, handleMarkerClick, handleCloseInfoWindow, handleMenuToggle, loading]);
+  ), [evacuationMarkers, selectedMarker, handleMarkerClick, handleCloseInfoWindow, handleMenuToggle, loading, showEvacuation]);
 
   const renderedAedMarkers = useMemo(() => (
-    aedMarkers.map((marker) => (
+    showAED && aedMarkers.map((marker) => (
       <Marker
         key={marker.id}
         position={marker.position}
         onClick={() => handleMarkerClick(marker)}
         icon={{
           url: aedIcon,
-          scaledSize: new window.google.maps.Size(25, 25),
+          scaledSize: new window.google.maps.Size(35, 35),
         }}
       >
         {selectedMarker && 'id' in selectedMarker && selectedMarker.id === marker.id && selectedMarker.hasOwnProperty('place') && (
@@ -202,7 +223,32 @@ function Map() {
         )}
       </Marker>
     ))
-  ), [aedMarkers, selectedMarker, handleMarkerClick, handleCloseInfoWindow, handleMenuToggle, loading]);
+  ), [aedMarkers, selectedMarker, handleMarkerClick, handleCloseInfoWindow, handleMenuToggle, loading, showAED]);
+
+
+  const renderedHospitalMarkers = useMemo(() => (
+    showHospital && hospitalMarkers.map((marker) => (
+      <Marker
+        key={marker.id}
+        position={marker.position}
+        onClick={() => handleMarkerClick(marker)}
+        icon={{
+          url: hospitalIcon,
+          scaledSize: new window.google.maps.Size(35, 35),
+        }}
+      >
+        {selectedMarker && 'id' in selectedMarker && selectedMarker.id === marker.id && selectedMarker.hasOwnProperty('phone') &&  (
+          <HospitalInfoWindow 
+            selectedMarker={selectedMarker as HospitalMarkerData}
+            handleDirectionsClick={handleDirectionsClick} 
+            handleCloseInfoWindow={handleCloseInfoWindow} 
+            handleMenuToggle={handleMenuToggle}
+            loading={loading} 
+          />
+        )}
+      </Marker>
+    ))
+  ), [hospitalMarkers, selectedMarker, handleMarkerClick, handleCloseInfoWindow, handleMenuToggle, loading, showHospital]);
 
   return (
     <div className="w-9/12 h-full">
@@ -213,9 +259,10 @@ function Map() {
           zoom={11}
           onLoad={handleMapLoad}
         >
-          {/* {renderedFirebaseMarkers} */}
-          {/* {renderedEvacuationMarkers} */}
+          {renderedFirebaseMarkers}
+          {renderedEvacuationMarkers}
           {renderedAedMarkers}
+          {renderedHospitalMarkers}
         </GoogleMap>
       </LoadScript>
     </div>
