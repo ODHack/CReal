@@ -47,12 +47,6 @@ const HospitalInfoWindow: React.FC<HospitalInfoWindowProps> = ({
             'ここに向かう'
           )}
         </button>
-        <button
-          onClick={handleMenuToggle}
-          className="bg-blue-500 text-white px-4 py-2 rounded w-full mt-2 flex items-center justify-center"
-        >
-          メニュー
-        </button>
       </div>
     </InfoWindow>
   );

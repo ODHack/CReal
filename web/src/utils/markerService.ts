@@ -17,6 +17,7 @@ export const fetchMarkersData = async (): Promise<MarkerData[]> => {
         lng: data.position.lng,
       },
       comments: data.comments || [],
+      solved: data.solved,
     };
   });
   return markerList;
