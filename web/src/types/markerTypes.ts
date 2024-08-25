@@ -13,14 +13,8 @@ export interface MarkerData {
   imageUrl: string;
   position: { lat: number; lng: number };
   comments: Comment[]; // コメントの配列
+  solved: boolean;
   // timestamp: Timestamp;
-}
-
-export interface MarkerData2 {
-  id: string;
-  title: string;
-  description: string;
-  position: { lat: number; lng: number };
 }
 
 export interface EvacuationMarkerData {
