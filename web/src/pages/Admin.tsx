@@ -209,16 +209,16 @@ const Admin: React.FC = () => {
               <div className="flex flex-col justify-between bg-gray-50 p-4 rounded-lg shadow-md text-gray-700 w-80">
                 <div>
                   <div className="flex items-center justify-center mb-4">
-                    <img src={report.imageUrl} alt={report.title} className="w-48 h-48 object-cover rounded-lg" />
+                    <img src={report.imageUrl} alt={report.title} className="min-w-48 min-h-48" />
                   </div>
                   <h2 className="text-xl font-semibold mb-2">{report.title}</h2>
+                  <p className="mb-4">{report.description}</p>
                   <p className="mb-2">発生日時: {formatTimestamp(report.timestamp)}</p>
                   <p className="mb-2">災害タイプ: {report.disasterType}</p>
                   <p className="mb-2">被害の種類: {report.damageType}</p>
                   <p className="mb-2">被害の程度: {report.damageLevel}</p>
                   <p className="mb-2">影響を受けたエリア: {report.affectedArea}</p>
                   <p className="mb-2">求める対応: {report.responseAction}</p>
-                  <p className="mb-4">{report.description}</p>
                 </div>
                 <button
                   onClick={() => handleSolveClick(report)}

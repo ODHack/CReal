@@ -380,8 +380,8 @@ function Home() {
   }, [aedMarkers, evacuationMarkers, hospitalMarkers, handleDirectionsClick]);
 
   return (
-    <div className="flex h-screen w-screen">
-      <div className="w-3/12 bg-gray-100 p-4 text-black">
+    <div className="flex w-screen">
+      <div className="w-3/12 min-h-screen bg-gray-100 p-4 text-black">
         <div className="flex justify-center mb-4">
           <img src={logo} alt="サービスのロゴ" className="w-32 h-auto" />
         </div>
@@ -475,7 +475,7 @@ function Home() {
           <p>応急手当の基本的な方法や、怪我や病気の応急処置についての情報が提供されています。</p>
         </div>
       </div>
-      <div className="w-9/12 h-full">
+      <div className="w-9/12">
         <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY!} libraries={['places']}>
           <GoogleMap
             mapContainerStyle={containerStyle}
