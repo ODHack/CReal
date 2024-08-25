@@ -9,13 +9,28 @@ export const uploadImageToStorage = async (file: File) => {
   return url;
 };
 
-export const addReportToFirestore = async (title: string, description: string, position: { lat: number; lng: number } | null, imageUrl: string | null) => {
+export const addReportToFirestore = async (
+  title: string,
+  description: string,
+  position: { lat: number; lng: number } | null,
+  imageUrl: string | null,
+  disasterType: string | null,
+  damageLevel: string | null,
+  affectedArea: string | null,
+  damageType: string | null,
+  responseAction: string | null
+) => {
   return addDoc(collection(db, 'reports'), {
     title,
     description,
     position,
     imageUrl,
     timestamp: new Date(),
-    comments: []
+    comments: [],
+    disasterType,
+    damageLevel,
+    affectedArea,
+    damageType,
+    responseAction,
   });
 };

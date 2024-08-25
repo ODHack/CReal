@@ -7,7 +7,7 @@ interface FormInputProps {
   onDescriptionChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
-const FormInput: React.FC<FormInputProps> = ({ title, description, onTitleChange, onDescriptionChange }) => (
+const FormInput: React.FC<FormInputProps> = ({ title, description, onTitleChange, onDescriptionChange, isMenuVisible }) => (
   <>
     <div className="mb-4">
       <label className="block text-sm font-medium text-gray-700 mb-1">タイトル</label>
