@@ -14,6 +14,10 @@ export interface MarkerData {
   position: { lat: number; lng: number };
   comments: Comment[]; // コメントの配列
   solved: boolean;
+  disasterType: string;
+  damageLevel: string;
+  affectedArea: string;
+  damageType: string;
   // timestamp: Timestamp;
 }
 

@@ -36,7 +36,7 @@ const HospitalInfoWindow: React.FC<HospitalInfoWindowProps> = ({
         </div>
         <button
           onClick={handleDirectionsClick}
-          className={`${loading ? 'bg-orange-500' : 'bg-green-500'} text-white px-4 py-2 rounded w-full mt-2 flex items-center justify-center`}
+          className={`${loading ? 'bg-orange-500' : 'bg-green-500 hover:bg-green-700'} text-white px-4 py-2 rounded w-full mt-2 flex items-center justify-center`}
         >
           {loading ? (
             <>

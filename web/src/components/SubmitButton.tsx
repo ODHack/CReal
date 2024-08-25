@@ -11,7 +11,7 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({ loading, onClick }) => (
     <button
       onClick={onClick}
       className={`px-4 py-2 rounded w-full flex justify-center items-center 
-                  ${loading ? 'bg-orange-500' : 'bg-blue-500'} 
+                  ${loading ? 'bg-orange-500' : 'bg-blue-500 hover:bg-blue-700'} 
                   text-white`}
       disabled={loading}
     >

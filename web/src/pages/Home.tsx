@@ -16,8 +16,10 @@ import evacuationData from '../assets/evacuationData.json';
 import aedData from '../assets/AEDData.json';
 import hospitalData from '../assets/hospitalData.json';
 import ReportModal from '../components/ReportModal';
-import logo from '../assets/CRealLogo.jpg'; // 画像ファイルのパス
+import logo from '../assets/CRealLogo.jpg';
 import { FaSpinner } from 'react-icons/fa';
+import { isPointWithinRadius } from 'geolib';
+import {ActivityIndicator} from 'react-native';
 
 function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -37,6 +39,25 @@ function Home() {
   const [loadingPathToHospital, setloadingPathToHospital] = useState(false);
   const [loadingPathToAED, setloadingPathToAED] = useState(false);
   const [selectedMarker, setSelectedMarker] = useState<MarkerData | EvacuationMarkerData | AEDMarkerData | HospitalMarkerData | null>(null);
+  const [currentPosition, setCurrentPosition] = useState<{ lat: number; lng: number } | null>(null);
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setCurrentPosition({ lat: latitude, lng: longitude });
+        },
+        (error) => {
+          console.error('Error fetching location:', error);
+          // Handle the error or set a default location
+        }
+      );
+    } else {
+      console.error('Geolocation is not supported by this browser.');
+      // Handle the case when geolocation is not supported
+    }
+  }, []);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -79,43 +100,73 @@ function Home() {
     };
   
     const loadAEDMarkers = () => {
-      const aedMarkerData: AEDMarkerData[] = aedData.map((data) => ({
-        id: "1",
-        title: data.配置施設名,
-        place: data.設置個所,
-        position: { lat: parseFloat(data.緯度), lng: parseFloat(data.経度) },
-      }));
-      setAedMarkers(aedMarkerData);
+      navigator.geolocation.getCurrentPosition((position) => {
+        const { latitude, longitude } = position.coords;
+
+        const aedMarkerData: AEDMarkerData[] = aedData.map((data) => ({
+          id: "1",
+          title: data.配置施設名,
+          place: data.設置個所,
+          position: { lat: parseFloat(data.緯度), lng: parseFloat(data.経度) },
+        }));
+
+        const aedMarkersWhithinRadius = aedMarkerData.filter(marker => isPointWithinRadius(
+          { latitude, longitude },
+          { latitude: marker.position.lat, longitude: marker.position.lng },
+          1500
+        ));
+        setAedMarkers(aedMarkersWhithinRadius);
+      });
     };
   
     const loadEvacuationMarkers = () => {
-      const evacuationMarkerData: EvacuationMarkerData[] = evacuationData.map((data) => ({
-        id: "1",
-        title: data.避難所or施設名称,
-        elvator1f: data.エレベーター有or避難スペースが１階 === "True",
-        slope: data.スロープ等 === "True",
-        brailleBlock: data.点字ブロック === "True",
-        WheelchairToilet: data.車椅子使用者対応トイレ === "True",
-        position: { lat: parseFloat(data.緯度), lng: parseFloat(data.経度) },
-      }));
-      setEvacuationMarkers(evacuationMarkerData);
+      navigator.geolocation.getCurrentPosition((position) => {
+        const { latitude, longitude } = position.coords;
+
+        const evacuationMarkerData: EvacuationMarkerData[] = evacuationData.map((data) => ({
+          id: "1",
+          title: data.避難所or施設名称,
+          elvator1f: data.エレベーター有or避難スペースが１階 === "True",
+          slope: data.スロープ等 === "True",
+          brailleBlock: data.点字ブロック === "True",
+          WheelchairToilet: data.車椅子使用者対応トイレ === "True",
+          position: { lat: parseFloat(data.緯度), lng: parseFloat(data.経度) },
+        }));
+
+        const evacuationMarkersWhithinRadius = evacuationMarkerData.filter(marker => isPointWithinRadius(
+          { latitude, longitude },
+          { latitude: marker.position.lat, longitude: marker.position.lng },
+          1500
+        ));
+        setEvacuationMarkers(evacuationMarkersWhithinRadius);
+      });
     };
   
     const loadHospitalMarkers = () => {
-      const hospitalMarkerData: HospitalMarkerData[] = hospitalData.map((data) => ({
-        id: "1",
-        title: data.施設名,
-        phone: data.電話番号,
-        numberOfBeds: parseInt(data.病床数),
-        tertiaryEmergency: data.三次救急 == "True",
-        position: { lat: parseFloat(data.Latitude), lng: parseFloat(data.Longitude) },
-      }));
-      setHospitalMarkers(hospitalMarkerData);
+      navigator.geolocation.getCurrentPosition((position) => {
+        const { latitude, longitude } = position.coords;
+
+        const hospitalMarkerData: HospitalMarkerData[] = hospitalData.map((data) => ({
+          id: "1",
+          title: data.施設名,
+          phone: data.電話番号,
+          numberOfBeds: parseInt(data.病床数),
+          tertiaryEmergency: data.三次救急 == "True",
+          position: { lat: parseFloat(data.Latitude), lng: parseFloat(data.Longitude) },
+        }));
+
+        const hospitalMarkersWhithinRadius = hospitalMarkerData.filter(marker => isPointWithinRadius(
+          { latitude, longitude },
+          { latitude: marker.position.lat, longitude: marker.position.lng },
+          1500
+        ));
+        setHospitalMarkers(hospitalMarkersWhithinRadius);
+      });
     };
   
     // 最初の処理を開始
     loadMarkers();
-  }, []);
+  }, [currentPosition]);
   
 
   const handleMapLoad = useCallback((map: google.maps.Map) => {
@@ -327,7 +378,6 @@ function Home() {
       }
     });
   }, [aedMarkers, evacuationMarkers, hospitalMarkers, handleDirectionsClick]);
-  
 
   return (
     <div className="flex h-screen w-screen">
@@ -337,26 +387,26 @@ function Home() {
         </div>
         <button
           onClick={openModal}
-          className="mt-4 bg-red-500 text-white px-4 py-2 rounded w-full"
+          className="mt-4 bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded w-full"
         >
           被害状況を報告
         </button>
         <div className="mt-4">
           <button
-            onClick={() => handleFilterChange('aed')}
-            className={`w-full px-4 py-2 rounded ${showAED ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'}`}
-          >
-            {showAED ? 'AEDを非表示にする' : 'AEDを表示する'}
-          </button>
-          <button
             onClick={() => handleFilterChange('evacuation')}
-            className={`w-full mt-2 px-4 py-2 rounded ${showEvacuation ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'}`}
+            className={`w-full mt-2 px-4 py-2 rounded ${showEvacuation ? 'bg-blue-500 hover:bg-blue-700 text-white' : 'bg-gray-700 hover:bg-gray-500 text-black'}`}
           >
             {showEvacuation ? '避難所を非表示にする' : '避難所を表示する'}
           </button>
           <button
+            onClick={() => handleFilterChange('aed')}
+            className={`w-full mt-2 px-4 py-2 rounded ${showAED ? 'bg-blue-500 hover:bg-blue-700 text-white' : 'bg-gray-700 hover:bg-gray-500 text-black'}`}
+          >
+            {showAED ? 'AEDを非表示にする' : 'AEDを表示する'}
+          </button>
+          <button
             onClick={() => handleFilterChange('hospital')}
-            className={`w-full mt-2 px-4 py-2 rounded ${showHospital ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'}`}
+            className={`w-full mt-2 px-4 py-2 rounded ${showHospital ? 'bg-blue-500 hover:bg-blue-700 text-white' : 'bg-gray-700 hover:bg-gray-500 text-black'}`}
           >
             {showHospital ? '病院を非表示にする' : '病院を表示する'}
           </button>
@@ -364,7 +414,7 @@ function Home() {
         <div className="mt-4">
           <button
             onClick={() => handleShowRoute('evacuation')}
-            className={`w-full mt-2 text-white px-4 py-2 rounded flex items-center justify-center ${loadingPathToEvacuation ? 'bg-orange-500' : 'bg-green-500'}`}
+            className={`w-full mt-2 text-white px-4 py-2 rounded flex items-center justify-center ${loadingPathToEvacuation ? 'bg-orange-500' : 'bg-green-500 hover:bg-green-700'}`}
             disabled={loading || loadingPathToEvacuation || loadingPathToHospital || loadingPathToAED}
           >
             {loadingPathToEvacuation ? (
@@ -378,7 +428,7 @@ function Home() {
           </button>
           <button
             onClick={() => handleShowRoute('hospital')}
-            className={`w-full mt-2 text-white px-4 py-2 rounded flex items-center justify-center ${loadingPathToHospital ? 'bg-orange-500' : 'bg-green-500'}`}
+            className={`w-full mt-2 text-white px-4 py-2 rounded flex items-center justify-center ${loadingPathToHospital ? 'bg-orange-500' : 'bg-green-500 hover:bg-green-700'}`}
             disabled={loading || loadingPathToEvacuation || loadingPathToHospital || loadingPathToAED}
           >
             {loadingPathToHospital ? (
@@ -392,7 +442,7 @@ function Home() {
           </button>
           <button
             onClick={() => handleShowRoute('aed')}
-            className={`w-full mt-2 text-white px-4 py-2 rounded flex items-center justify-center ${loadingPathToAED ? 'bg-orange-500' : 'bg-green-500'}`}
+            className={`w-full mt-2 text-white px-4 py-2 rounded flex items-center justify-center ${loadingPathToAED ? 'bg-orange-500' : 'bg-green-500 hover:bg-green-700'}`}
             disabled={loading || loadingPathToEvacuation || loadingPathToHospital || loadingPathToAED}
           >
             {loadingPathToAED ? (
@@ -426,19 +476,19 @@ function Home() {
         </div>
       </div>
       <div className="w-9/12 h-full">
-      <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY!} libraries={['places']}>
-        <GoogleMap
-          mapContainerStyle={containerStyle}
-          center={center}
-          zoom={11}
-          onLoad={handleMapLoad}
-        >
-          {renderedFirebaseMarkers}
-          {renderedEvacuationMarkers}
-          {renderedAedMarkers}
-          {renderedHospitalMarkers}
-        </GoogleMap>
-      </LoadScript>
+        <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY!} libraries={['places']}>
+          <GoogleMap
+            mapContainerStyle={containerStyle}
+            center={currentPosition || { lat: 35.682839, lng: 139.759455 }}
+            zoom={15}
+            onLoad={handleMapLoad}
+          >
+            {renderedFirebaseMarkers}
+            {renderedEvacuationMarkers}
+            {renderedAedMarkers}
+            {renderedHospitalMarkers}
+          </GoogleMap>
+        </LoadScript>
     </div>
       {isModalOpen && (
         <ReportModal isOpen={isModalOpen} onClose={closeModal} />

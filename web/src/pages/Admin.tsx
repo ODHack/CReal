@@ -109,7 +109,7 @@ const Admin: React.FC = () => {
   }
 
   return (
-    <div className="flex h-screen w-screen">
+    <div className="flex min-h-screen w-screen bg-gray-100">
       <div className="w-3/12 flex flex-col justify-start bg-gray-100">
         <div className="mt-8 flex justify-center mb-4">
           <img src={logo} alt="サービスのロゴ" className="w-32 h-auto" />
@@ -142,7 +142,7 @@ const Admin: React.FC = () => {
               className="border p-2 rounded w-full bg-white"
             >
               <option value="">すべて</option>
-              <option value="経度">経度</option>
+              <option value="軽度">軽度</option>
               <option value="中程度">中程度</option>
               <option value="重大">重大</option>
               <option value="壊滅的">壊滅的</option>
@@ -203,61 +203,48 @@ const Admin: React.FC = () => {
         </div>
       </div>
       <div className="pl-4 bg-white w-full">
-        <ul className="flex flex-wrap gap-4 mt-8">
+        <ul className="flex flex-wrap gap-4 mt-8 mb-8">
           {filteredReports.map(report => (
             <li key={report.id} className="flex">
-              <div className="bg-gray-50 p-4 rounded-lg shadow-md text-gray-700 w-80">
-                <div className="flex items-center justify-center">
-                  <img src={report.imageUrl} alt={report.title} className="h-auto w-auto max-h-48 max-w-72"/>
-                </div>
-                <p className="text-sm text-gray-500">{formatTimestamp(report.timestamp)}</p>
-                <h2 className="text-xl font-semibold mb-2">{report.title}</h2>
-                <p className="mb-2">{report.description}</p>
-                <div className="flex">
-                  <p className="font-semibold">災害タイプ:</p>
-                  <p>{report.disasterType}</p>
-                </div>
-                <div className="flex">
-                  <p className="font-semibold">被害の種類:</p>
-                  <p>{report.damageType}</p>
-                </div>
-                <div className="flex">
-                  <p className="font-semibold">被害の程度:</p>
-                  <p>{report.damageLevel}</p>
-                </div>
-                <div className="flex">
-                  <p className="font-semibold">影響を受けたエリア:</p>
-                  <p>{report.affectedArea}</p>
-                </div>
-                <div className="mb-2 flex">
-                  <p className="font-semibold">対策や対応:</p>
-                  <p>{report.responseAction}</p>
+              <div className="flex flex-col justify-between bg-gray-50 p-4 rounded-lg shadow-md text-gray-700 w-80">
+                <div>
+                  <div className="flex items-center justify-center mb-4">
+                    <img src={report.imageUrl} alt={report.title} className="w-48 h-48 object-cover rounded-lg" />
+                  </div>
+                  <h2 className="text-xl font-semibold mb-2">{report.title}</h2>
+                  <p className="mb-2">発生日時: {formatTimestamp(report.timestamp)}</p>
+                  <p className="mb-2">災害タイプ: {report.disasterType}</p>
+                  <p className="mb-2">被害の種類: {report.damageType}</p>
+                  <p className="mb-2">被害の程度: {report.damageLevel}</p>
+                  <p className="mb-2">影響を受けたエリア: {report.affectedArea}</p>
+                  <p className="mb-2">求める対応: {report.responseAction}</p>
+                  <p className="mb-4">{report.description}</p>
                 </div>
                 <button
                   onClick={() => handleSolveClick(report)}
-                  className="bg-green-500 text-white px-4 py-2 rounded w-full mt-2"
-                  disabled={report.solved}
+                  className="mt-auto bg-green-500 text-white p-2 rounded hover:bg-green-700 transition-colors duration-200"
                 >
-                  {report.solved ? "対応済み" : "対応完了"}
+                  対応完了
                 </button>
               </div>
             </li>
           ))}
         </ul>
-        {selectedReport && (
+      </div>
+      {selectedReport && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
             <div className="bg-white p-4 rounded-lg shadow-md text-center">
               <p className="text-gray-700">本当に対応完了にしてよろしいでしょうか？</p>
               <div className="mt-4">
                 <button
                   onClick={handleConfirmSolve}
-                  className="bg-green-500 text-white px-4 py-2 rounded mr-2"
+                  className="bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded mr-2"
                 >
                   対応完了
                 </button>
                 <button
                   onClick={() => setSelectedReport(null)}
-                  className="bg-red-500 text-white px-4 py-2 rounded"
+                  className="bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded"
                 >
                   キャンセル
                 </button>
@@ -265,7 +252,6 @@ const Admin: React.FC = () => {
             </div>
           </div>
         )}
-      </div>
     </div>
   );
 };
